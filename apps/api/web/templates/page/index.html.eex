@@ -1,0 +1,21 @@
+<div class="jumbotron">
+  <h2>Welcome to Ice.net!</h2>
+  <p class="lead">Overlegen dekning i Norge</p>
+</div>
+
+<div class="row marketing">
+  <div class="col-lg-6">
+    <h4>Kanskje</h4>
+    <ul>
+      <li>
+        Maybe we have an API somewhere in this box?
+      </li>
+      <li>
+        Maybe we have a competition running there?
+      </li>
+      <li>
+        Maybe you want to join?
+      </li>
+    </ul>
+  </div>
+</div>
