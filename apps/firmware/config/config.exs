@@ -9,4 +9,14 @@ use Mix.Config
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
 
+config :nerves_interim_wifi,
+  regulatory_domain: "NO"
+
 # import_config "#{Mix.Project.config[:target]}.exs"
+
+config :api, :sessions_filename,
+  '/root/sessions.dets'
+
+  # Import environment specific config. This must remain at the bottom
+  # of this file so it overrides the configuration defined above.
+import_config "#{Mix.env}.exs"

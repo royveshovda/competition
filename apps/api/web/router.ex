@@ -25,8 +25,11 @@ defmodule Api.Router do
      get "/", RootController, :index
      get "/register", RegisterController, :index
      post "/register/:session_key", RegisterController, :create
-     get "/q1", Q1Controller, :index
-     get "/quest2", Q2Controller, :index
-     get "/que3", Q3Controller, :index
+     get "/q1/:session_key", Q1Controller, :index
+     post "/q1/:session_key", Q1Controller, :create
+     get "/quest2/:session_key", Q2Controller, :index
+     post "/quest2/:session_key", Q2Controller, :create
+     get "/que3/:session_key", Q3Controller, :index
+     post "/que3/:session_key", Q3Controller, :create
    end
 end

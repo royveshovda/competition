@@ -55,10 +55,15 @@ defmodule Firmware.Mixfile do
   end
 
   # Specify target specific dependencies
-  def deps("host"), do: []
-  def deps(target) do
+  def deps("host"), do: [
+    {:api, in_umbrella: true}
+  ]
+  def deps("rpi0") do
     [{:nerves_runtime, "~> 0.1.0"},
-     {:"nerves_system_#{target}", "~> 0.11.0", runtime: false}]
+     {:nerves_system_rpi0, "~> 0.12.0", runtime: false},
+     {:nerves_interim_wifi, "~> 0.2.0"},
+     {:api, in_umbrella: true},
+     {:leds, in_umbrella: true}]
   end
 
   # We do not invoke the Nerves Env when running on the Host

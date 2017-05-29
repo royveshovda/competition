@@ -16,7 +16,11 @@ config :api, Api.Endpoint,
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+  metadata: [:request_id],
+  level: :debug
+
+config :api, :sessions_filename,
+  'sessions.dets'
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

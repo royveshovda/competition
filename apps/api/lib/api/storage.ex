@@ -1,6 +1,5 @@
 defmodule Api.Storage do
   use GenServer
-  @dets_file 'sessions.dets'
   def start_link() do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -30,7 +29,8 @@ defmodule Api.Storage do
   # Server callbacks
 
   def init([]) do
-    {:ok, sessions} = :dets.open_file(:sessions, [file: @dets_file, type: :set])
+    filename = Application.fetch_env!(:api, :sessions_filename)
+    {:ok, sessions} = :dets.open_file(:sessions, [file: filename, type: :set])
     {:ok, sessions}
   end
 

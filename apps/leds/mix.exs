@@ -19,7 +19,8 @@ defmodule Leds.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger],
+     mod: {Leds.Application, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -36,6 +37,6 @@ defmodule Leds.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:elixir_ale, "~> 1.0"}]
   end
 end
