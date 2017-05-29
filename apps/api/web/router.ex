@@ -24,6 +24,7 @@ defmodule Api.Router do
      pipe_through :api
      get "/", RootController, :index
      get "/register", RegisterController, :index
+     post "/register/:session_key", RegisterController, :create
      get "/q1", Q1Controller, :index
      get "/quest2", Q2Controller, :index
      get "/que3", Q3Controller, :index
