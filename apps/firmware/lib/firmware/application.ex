@@ -10,7 +10,8 @@ defmodule Firmware.Application do
     # Define workers and child supervisors to be supervised
     children = [
       # worker(Firmware.Worker, [arg1, arg2, arg3]),
-      worker(Task, [fn -> init_network() end], restart: :transient, id: Nerves.Init.Network)
+      worker(Task, [fn -> init_network() end], restart: :transient, id: Nerves.Init.Network),
+      #worker(Nerves.Ntp.Worker, [], restart: :permanent)
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

@@ -37,7 +37,7 @@ defmodule Firmware.Mixfile do
   end
   def application(_target) do
     [mod: {Firmware.Application, []},
-     extra_applications: [:logger, :timber]]
+     extra_applications: [:logger, :timber, :nerves_ntp]]
   end
 
   # Dependencies can be Hex packages:
@@ -63,6 +63,7 @@ defmodule Firmware.Mixfile do
      {:nerves_system_rpi0, "~> 0.12.0", runtime: false},
      {:nerves_interim_wifi, "~> 0.2.0"},
      {:timber, "~> 2.0"},
+     {:nerves_ntp, git: "https://github.com/evokly/nerves_ntp.git"},
      {:api, in_umbrella: true},
      {:leds, in_umbrella: true}]
   end
