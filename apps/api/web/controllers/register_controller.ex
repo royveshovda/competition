@@ -4,8 +4,6 @@ def index(conn, _params) do
     #Generate a new session
     session_key = Api.Storage.new_session()
 
-    # TODO: Send to AWS
-
     template =
       %{email: "me@mail.com", name: "My Myself"}
     url = "/api/register/" <> session_key
@@ -21,11 +19,13 @@ def index(conn, _params) do
   end
 
   def create(conn, %{"email" => email, "name" => name, "session_key" => session_key}) do
-    IO.puts "Name: " <> name
-    IO.puts "Email: " <> email
-    IO.puts "Session key: " <> session_key
-    next_url = "/api/q1/" <> session_key
-    result = %{result: "OK", next_url: next_url, next_action: "GET"}
+    result = case Api.Storage.is_valid_key?(session_key) do
+      false -> %{result: "Invalid session-key"}
+      true ->
+        Api.Storage.set_name_and_email(session_key, name, email)
+        next_url = "/api/q1/" <> session_key
+        %{result: "OK", next_url: next_url, next_action: "GET"}
+    end
     json conn, result
   end
 end

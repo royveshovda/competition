@@ -1,29 +1,37 @@
 defmodule Api.Q2Controller do
   use Api.Web, :controller
-  def index(conn, %{"session_key" => session_key}) do
-    # TODO: Verify session-key
 
-    IO.puts "Session key: " <> session_key
-    url = "/api/quest2/" <> session_key
-    result =
-      %{question: "What is 2+2?",
-        action: "POST",
-        url: url,
-        expected_content_type: "application/json",
-        payload_template: %{answer: "<your answer here>"}}
+  def index(conn, %{"session_key" => session_key}) do
+    result = case Api.Storage.is_valid_key?(session_key) do
+      false -> %{result: "Invalid session-key"}
+      true ->
+        %{question: "What is 2+2?",
+          action: "POST",
+          url: "/api/quest2/" <> session_key,
+          expected_content_type: "application/json",
+          payload_template: %{answer: "<your answer here>"}}
+    end
     json conn, result
   end
 
   def create(conn, %{"answer" => answer, "session_key" => session_key}) do
-    # TODO: Verify session-key
-    # TODO: Verify answer
-
-    # TODO: Light red and yellow LED
-
-    IO.puts "Answer: " <> answer
-    IO.puts "Session key: " <> session_key
-    next_url = "/api/que3/" <> session_key
-    result = %{result: "OK", next_url: next_url, next_action: "GET"}
+    correct_answer = "4"
+    result = case Api.Storage.is_valid_key?(session_key) do
+      false -> %{result: "Invalid session-key"}
+      true ->
+        case to_string(answer) == correct_answer do
+          false ->
+            Api.Storage.set_q2_wrong(session_key)
+            %{result: "Wrong answer"}
+          true ->
+            Api.Storage.set_q2_correct(session_key)
+            # TODO: Light red and yellow LEDs
+            %{result: "OK",
+              next_url: "/api/que3/" <> session_key,
+              next_action: "GET"}
+        end
+    end
+    # TODO: Light yellow LED
     json conn, result
   end
 end

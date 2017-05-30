@@ -15,8 +15,8 @@ config :nerves_interim_wifi,
 # import_config "#{Mix.Project.config[:target]}.exs"
 
 config :api, :sessions_filename,
-  '/root/sessions.dets'
-  #'sessions.dets'
+  #'/root/sessions.dets'
+  'sessions.dets'
 
 # ntpd binary to use
 config :nerves_ntp, :ntpd, "/usr/sbin/ntpd"
