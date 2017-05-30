@@ -20,7 +20,6 @@ defmodule Api.Endpoint do
   end
 
   plug Plug.RequestId
-  plug Plug.Logger
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -37,6 +36,10 @@ defmodule Api.Endpoint do
     store: :cookie,
     key: "_api_key",
     signing_salt: "KrZUBfMl"
+
+  # Add Timber plugs for capturing HTTP context and events
+  plug Timber.Integrations.ContextPlug
+  plug Timber.Integrations.EventPlug
 
   plug Api.Router
 end

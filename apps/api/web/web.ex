@@ -24,7 +24,7 @@ defmodule Api.Web do
 
   def controller do
     quote do
-      use Phoenix.Controller
+      use Phoenix.Controller, log: false
 
       import Api.Router.Helpers
       import Api.Gettext
