@@ -33,11 +33,11 @@ defmodule Firmware.Mixfile do
   # applications which could cause the host to fail. Because of this, we only
   # invoke Firmware.start/2 when running on a target.
   def application("host") do
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger, :timber]]
   end
   def application(_target) do
     [mod: {Firmware.Application, []},
-     extra_applications: [:logger]]
+     extra_applications: [:logger, :timber]]
   end
 
   # Dependencies can be Hex packages:
@@ -62,6 +62,7 @@ defmodule Firmware.Mixfile do
     [{:nerves_runtime, "~> 0.1.0"},
      {:nerves_system_rpi0, "~> 0.12.0", runtime: false},
      {:nerves_interim_wifi, "~> 0.2.0"},
+     {:timber, "~> 2.0"},
      {:api, in_umbrella: true},
      {:leds, in_umbrella: true}]
   end
