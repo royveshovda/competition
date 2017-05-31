@@ -31,7 +31,3 @@ if Enum.member?(environments_to_exclude, Mix.env()) do
     backends: [:console],
     utc_log: true
 end
-
-# Need help?
-# Email us: support@timber.io
-# Or, file an issue: https://github.com/timberio/timber-elixir/issues

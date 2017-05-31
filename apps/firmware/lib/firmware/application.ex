@@ -8,11 +8,7 @@ defmodule Firmware.Application do
     import Supervisor.Spec, warn: false
 
     # Define workers and child supervisors to be supervised
-    children = [
-      # worker(Firmware.Worker, [arg1, arg2, arg3]),
-      worker(Task, [fn -> init_network() end], restart: :transient, id: Nerves.Init.Network),
-      #worker(Nerves.Ntp.Worker, [], restart: :permanent)
-    ]
+    children = build_children(Mix.env)
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
@@ -20,6 +16,16 @@ defmodule Firmware.Application do
     Supervisor.start_link(children, opts)
   end
 
+  defp build_children("host") do
+    import Supervisor.Spec, warn: false
+    IO.puts("HOST")
+    []
+  end
+
+  defp build_children(_target) do
+    import Supervisor.Spec, warn: false
+    [worker(Task, [fn -> init_network() end], restart: :transient, id: Nerves.Init.Network)]
+  end
 
   def init_network() do
     opts = Application.get_env(:firmware, @interface)

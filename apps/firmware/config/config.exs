@@ -29,6 +29,13 @@ config :nerves_ntp, :servers, [
     "3.pool.ntp.org"
   ]
 
+# Phoenix
+config :api, Api.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: "PIbPfCnw7wecdCV0yldODBCv6ETjVId0wEmJ+pc58pVpkz65nUvGImfgql07/bG3",
+  render_errors: [view: Api.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Nerves.PubSub]
+
   # Import environment specific config. This must remain at the bottom
   # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

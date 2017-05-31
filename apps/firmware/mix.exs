@@ -35,6 +35,7 @@ defmodule Firmware.Mixfile do
   def application("host") do
     [extra_applications: [:logger, :timber]]
   end
+
   def application(_target) do
     [mod: {Firmware.Application, []},
      extra_applications: [:logger, :timber, :nerves_ntp]]
@@ -56,6 +57,7 @@ defmodule Firmware.Mixfile do
 
   # Specify target specific dependencies
   def deps("host"), do: [
+    {:timber, "~> 2.0"},
     {:api, in_umbrella: true}
   ]
   def deps("rpi0") do
