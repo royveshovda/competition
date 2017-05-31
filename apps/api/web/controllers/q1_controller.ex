@@ -25,6 +25,9 @@ defmodule Api.Q1Controller do
             %{result: "Wrong answer"}
           true ->
             Api.Storage.set_q1_correct(session_key)
+            Leds.Leds.set_green(0)
+            Leds.Leds.set_yellow(0)
+            Leds.Leds.set_red(1)
             # TODO: Light red LED
             %{result: "OK",
               next_url: "/api/quest2/" <> session_key,

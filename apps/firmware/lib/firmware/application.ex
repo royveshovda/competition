@@ -1,6 +1,7 @@
 defmodule Firmware.Application do
   use Application
   @interface :wlan0
+  @target "#{System.get_env("MIX_TARGET")}"
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -8,7 +9,7 @@ defmodule Firmware.Application do
     import Supervisor.Spec, warn: false
 
     # Define workers and child supervisors to be supervised
-    children = build_children(Mix.env)
+    children = build_children(@target)
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options

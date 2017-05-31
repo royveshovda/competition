@@ -26,6 +26,9 @@ defmodule Api.Q2Controller do
           true ->
             Api.Storage.set_q2_correct(session_key)
             # TODO: Light red and yellow LEDs
+            Leds.Leds.set_green(0)
+            Leds.Leds.set_yellow(1)
+            Leds.Leds.set_red(1)
             %{result: "OK",
               next_url: "/api/que3/" <> session_key,
               next_action: "GET"}

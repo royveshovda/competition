@@ -25,6 +25,9 @@ defmodule Api.Q3Controller do
             %{result: "Wrong answer"}
           true ->
             Api.Storage.set_q2_correct(session_key)
+            Leds.Leds.set_green(1)
+            Leds.Leds.set_yellow(1)
+            Leds.Leds.set_red(1)
             # TODO: Light red, yellow and green LEDs
             # TODO: Generate winner code
             # TODO: Post to slack

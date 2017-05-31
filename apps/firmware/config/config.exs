@@ -12,11 +12,7 @@ use Mix.Config
 config :nerves_interim_wifi,
   regulatory_domain: "NO"
 
-# import_config "#{Mix.Project.config[:target]}.exs"
-
-config :api, :sessions_filename,
-  #'/root/sessions.dets'
-  'sessions.dets'
+import_config "#{System.get_env("MIX_TARGET")}.exs"
 
 # ntpd binary to use
 config :nerves_ntp, :ntpd, "/usr/sbin/ntpd"
@@ -38,7 +34,7 @@ config :api, Api.Endpoint,
 
   # Import environment specific config. This must remain at the bottom
   # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{System.get_env("MIX_ENV")}.exs"
 
 # Import Timber, structured logging
 import_config "timber.exs"
