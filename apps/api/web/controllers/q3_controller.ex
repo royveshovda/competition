@@ -5,7 +5,7 @@ defmodule Api.Q3Controller do
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
-        %{question: "What is 3+3?",
+        %{question: Api.Questions.q3(),
           action: "POST",
           url: "/api/que3/" <> session_key,
           expected_content_type: "application/json",
@@ -15,24 +15,24 @@ defmodule Api.Q3Controller do
   end
 
   def create(conn, %{"answer" => answer, "session_key" => session_key}) do
-    correct_answer = "6"
+    correct_answer = to_string(Api.Questions.a3())
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
         case to_string(answer) == correct_answer do
           false ->
-            Api.Storage.set_q2_wrong(session_key)
+            Api.Storage.set_q3_wrong(session_key)
             %{result: "Wrong answer"}
           true ->
-            Api.Storage.set_q2_correct(session_key)
-            Leds.Leds.set_green(1)
-            Leds.Leds.set_yellow(1)
-            Leds.Leds.set_red(1)
-            # TODO: Light red, yellow and green LEDs
-            # TODO: Generate winner code
+            Api.Storage.set_q3_correct(session_key)
+            prize_token = Api.Storage.generate_and_store_prize_token(session_key)
+
+            Leds.Leds.set_3_correct()
+
             # TODO: Post to slack
             %{result: "OK",
               comment: "CONGRATULATIONS!!!!!!",
+              prize_token: prize_token,
               next_action: "human interaction: Talk to a person from Ice about this."}
         end
     end

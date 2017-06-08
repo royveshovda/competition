@@ -22,6 +22,14 @@ config :logger, :console,
 config :api, :sessions_filename,
   'sessions.dets'
 
+config :api, :questions,
+  q1: "What is 1+1?",
+  a1: 2,
+  q2: "What is 2+2?",
+  a2: 4,
+  q3: "What is 3+3?",
+  a3: 6
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

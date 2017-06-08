@@ -1,5 +1,14 @@
 defmodule Api.Storage do
   use GenServer
+
+  defstruct state: :not_registered,
+            q1: nil,
+            q2: nil,
+            q3: nil,
+            name: nil,
+            email: nil,
+            prize_token: nil
+
   def start_link() do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -57,6 +66,10 @@ defmodule Api.Storage do
     GenServer.cast(__MODULE__, {:name_and_email, session_key, name, email})
   end
 
+  def generate_and_store_prize_token(session_key) do
+    GenServer.call(__MODULE__, {:prize, session_key})
+  end
+
 
   # Server callbacks
 
@@ -77,37 +90,36 @@ defmodule Api.Storage do
   end
 
   def handle_cast({:q1, session_key, new_result}, sessions) do
-    [{session_key, %{state: s, q1: _q1, q2: q2, q3: q3, name: n, email: e}}] = :dets.lookup(sessions, session_key)
-    new_state = %{state: s, q1: new_result, q2: q2, q3: q3, name: n, email: e, state: s}
+    [{session_key, state}] = :dets.lookup(sessions, session_key)
+    new_state = %Api.Storage{state | q1: new_result}
     :dets.insert(sessions, {session_key, new_state})
     {:noreply, sessions}
   end
 
   def handle_cast({:q2, session_key, new_result}, sessions) do
-    [{session_key, %{state: s, q1: q1, q2: _q2, q3: q3, name: n, email: e, state: s}}] = :dets.lookup(sessions, session_key)
-    new_state = %{state: s, q1: q1, q2: new_result, q3: q3, name: n, email: e}
+    [{session_key, state}] = :dets.lookup(sessions, session_key)
+    new_state = %Api.Storage{state | q2: new_result}
     :dets.insert(sessions, {session_key, new_state})
     {:noreply, sessions}
   end
 
   def handle_cast({:q3, session_key, new_result}, sessions) do
-    [{session_key, %{state: s, q1: q1, q2: q2, q3: _q3, name: n, email: e, state: s}}] = :dets.lookup(sessions, session_key)
-    new_state = %{state: s, q1: q1, q2: q2, q3: new_result, name: n, email: e}
+    [{session_key, state}] = :dets.lookup(sessions, session_key)
+    new_state = %Api.Storage{state | q3: new_result}
     :dets.insert(sessions, {session_key, new_state})
     {:noreply, sessions}
   end
 
   def handle_cast({:name_and_email, session_key, name, email}, sessions) do
-    [{session_key, %{state: _s, q1: q1, q2: q2, q3: q3, name: _n, email: _e}}] = :dets.lookup(sessions, session_key)
-    new_state = %{state: :registered, q1: q1, q2: q2, q3: q3, name: name, email: email}
+    [{session_key, state}] = :dets.lookup(sessions, session_key)
+    new_state = %Api.Storage{state | state: :registered, name: name, email: email}
     :dets.insert(sessions, {session_key, new_state})
     {:noreply, sessions}
   end
 
   def handle_call(:new, _from, sessions) do
     key = ensure_unique_key(sessions, 32)
-
-    session_state = %{state: :not_registered, q1: :blocked, q2: :blocked, q3: :blocked, name: "?", email: "?"}
+    session_state = %Api.Storage{state: :not_registered}
     :dets.insert(sessions, {key, session_state})
     {:reply, key, sessions}
   end
@@ -128,6 +140,14 @@ defmodule Api.Storage do
       _ -> true
     end
     {:reply, result, sessions}
+  end
+
+  def handle_call({:prize, session_key}, _from, sessions) do
+    token = random_string(4) |> String.downcase
+    [{session_key, state}] = :dets.lookup(sessions, session_key)
+    new_state = %Api.Storage{state | prize_token: token}
+    :dets.insert(sessions, {session_key, new_state})
+    {:reply, token, sessions}
   end
 
   defp ensure_unique_key(sessions, length) do

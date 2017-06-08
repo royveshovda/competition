@@ -5,7 +5,7 @@ defmodule Api.Q2Controller do
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
-        %{question: "What is 2+2?",
+        %{question: Api.Questions.q2(),
           action: "POST",
           url: "/api/quest2/" <> session_key,
           expected_content_type: "application/json",
@@ -15,7 +15,7 @@ defmodule Api.Q2Controller do
   end
 
   def create(conn, %{"answer" => answer, "session_key" => session_key}) do
-    correct_answer = "4"
+    correct_answer = to_string(Api.Questions.a2())
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
@@ -25,16 +25,14 @@ defmodule Api.Q2Controller do
             %{result: "Wrong answer"}
           true ->
             Api.Storage.set_q2_correct(session_key)
-            # TODO: Light red and yellow LEDs
-            Leds.Leds.set_green(0)
-            Leds.Leds.set_yellow(1)
-            Leds.Leds.set_red(1)
+
+            Leds.Leds.set_2_correct()
+
             %{result: "OK",
               next_url: "/api/que3/" <> session_key,
               next_action: "GET"}
         end
     end
-    # TODO: Light yellow LED
     json conn, result
   end
 end

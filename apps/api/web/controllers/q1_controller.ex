@@ -5,7 +5,7 @@ defmodule Api.Q1Controller do
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
-        %{question: "What is 1+1?",
+        %{question: Api.Questions.q1(),
           action: "POST",
           url: "/api/q1/" <> session_key,
           expected_content_type: "application/json",
@@ -15,7 +15,8 @@ defmodule Api.Q1Controller do
   end
 
   def create(conn, %{"answer" => answer, "session_key" => session_key}) do
-    correct_answer = "2"
+    q = Application.get_env(:api, :questions)
+    correct_answer = to_string(Api.Questions.a1())
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
@@ -25,10 +26,9 @@ defmodule Api.Q1Controller do
             %{result: "Wrong answer"}
           true ->
             Api.Storage.set_q1_correct(session_key)
-            Leds.Leds.set_green(0)
-            Leds.Leds.set_yellow(0)
-            Leds.Leds.set_red(1)
-            # TODO: Light red LED
+
+            Leds.Leds.set_1_correct()
+
             %{result: "OK",
               next_url: "/api/quest2/" <> session_key,
               next_action: "GET"}
