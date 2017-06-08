@@ -15,7 +15,6 @@ defmodule Api.Q1Controller do
   end
 
   def create(conn, %{"answer" => answer, "session_key" => session_key}) do
-    q = Application.get_env(:api, :questions)
     correct_answer = to_string(Api.Questions.a1())
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}

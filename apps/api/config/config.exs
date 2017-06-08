@@ -30,6 +30,9 @@ config :api, :questions,
   q3: "What is 3+3?",
   a3: 6
 
+config :api, :slack,
+  url: "<webhook url>"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
