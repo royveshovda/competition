@@ -10,9 +10,6 @@ defmodule Firmware.Application do
 
     # Define workers and child supervisors to be supervised
     children = build_children(@target)
-
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Firmware.Supervisor]
     Supervisor.start_link(children, opts)
   end
@@ -31,9 +28,5 @@ defmodule Firmware.Application do
   def init_network() do
     opts = Application.get_env(:firmware, @interface)
     Nerves.InterimWiFi.setup(@interface, opts)
-  end
-
-  def send_startup_message() do
-    # TODO: Send message when starting up
   end
 end

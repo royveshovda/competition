@@ -5,6 +5,7 @@ defmodule Api.Q1Controller do
     result = case Api.Storage.is_valid_key?(session_key) do
       false -> %{result: "Invalid session-key"}
       true ->
+        Api.Slack.say_to_slack("("<>session_key<>") Q1 found")
         %{question: Api.Questions.q1(),
           action: "POST",
           url: "/api/q1/" <> session_key,
@@ -22,11 +23,14 @@ defmodule Api.Q1Controller do
         case to_string(answer) == correct_answer do
           false ->
             Api.Storage.set_q1_wrong(session_key)
+            Api.Slack.say_to_slack("("<>session_key<>") Q1 wrong: "<> to_string(answer))
             %{result: "Wrong answer"}
           true ->
             Api.Storage.set_q1_correct(session_key)
 
             Leds.Leds.set_1_correct()
+
+            Api.Slack.say_to_slack("("<>session_key<>") Q1 correct")
 
             %{result: "OK",
               next_url: "/api/quest2/" <> session_key,

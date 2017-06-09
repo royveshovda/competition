@@ -3,7 +3,7 @@ defmodule Api.RegisterController do
 def index(conn, _params) do
     #Generate a new session
     session_key = Api.Storage.new_session()
-
+    Api.Slack.say_to_slack("("<>session_key<>") New session")
     template =
       %{email: "me@mail.com", name: "My Myself"}
     url = "/api/register/" <> session_key
@@ -23,6 +23,7 @@ def index(conn, _params) do
       false -> %{result: "Invalid session-key"}
       true ->
         Api.Storage.set_name_and_email(session_key, name, email)
+        Api.Slack.say_to_slack("("<>session_key<>") Name: " <> name <> " -- Email: " <> email)
         next_url = "/api/q1/" <> session_key
         %{result: "OK", next_url: next_url, next_action: "GET"}
     end

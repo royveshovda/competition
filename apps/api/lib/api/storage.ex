@@ -7,7 +7,8 @@ defmodule Api.Storage do
             q3: nil,
             name: nil,
             email: nil,
-            prize_token: nil
+            prize_token: nil,
+            closed: false
 
   def start_link() do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -135,12 +136,10 @@ defmodule Api.Storage do
   end
 
   def handle_call({:valid, key}, _from, sessions) do
-
-    # TODO: block if already winner
-
     result = case :dets.lookup(sessions, key) do
       [] -> false
-      _ -> true
+      [{key, session}] -> !session.closed
+      _ -> false
     end
     {:reply, result, sessions}
   end
@@ -148,7 +147,7 @@ defmodule Api.Storage do
   def handle_call({:prize, session_key}, _from, sessions) do
     token = random_string(4) |> String.downcase
     [{session_key, state}] = :dets.lookup(sessions, session_key)
-    new_state = %Api.Storage{state | prize_token: token}
+    new_state = %Api.Storage{state | prize_token: token, closed: true}
     :dets.insert(sessions, {session_key, new_state})
     {:reply, token, sessions}
   end
