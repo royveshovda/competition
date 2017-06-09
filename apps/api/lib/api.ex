@@ -12,6 +12,7 @@ defmodule Api do
       supervisor(Api.Endpoint, []),
       # Start your own worker by calling: Api.Worker.start_link(arg1, arg2, arg3)
       worker(Api.Storage, []),
+      worker(Api.Startup, [], restart: :transient)
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

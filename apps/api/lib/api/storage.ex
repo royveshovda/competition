@@ -135,6 +135,9 @@ defmodule Api.Storage do
   end
 
   def handle_call({:valid, key}, _from, sessions) do
+
+    # TODO: block if already winner
+
     result = case :dets.lookup(sessions, key) do
       [] -> false
       _ -> true

@@ -32,4 +32,8 @@ defmodule Firmware.Application do
     opts = Application.get_env(:firmware, @interface)
     Nerves.InterimWiFi.setup(@interface, opts)
   end
+
+  def send_startup_message() do
+    # TODO: Send message when starting up
+  end
 end
