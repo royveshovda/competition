@@ -13,8 +13,6 @@ defmodule Api.Startup do
   end
 
   def handle_info(:ann, state) do
-    ips = get_ips()
-    Api.Slack.say_to_slack("Running on IP: " <> Enum.join(ips, " -- "))
     Api.Slack.say_to_slack("Starting up...I will serve the following questions:")
     Api.Slack.say_to_slack("Q1:  " <> Api.Questions.q1())
     Api.Slack.say_to_slack("A1:  " <> to_string(Api.Questions.a1()))
@@ -23,6 +21,8 @@ defmodule Api.Startup do
     Api.Slack.say_to_slack("Q3:  " <> Api.Questions.q3())
     Api.Slack.say_to_slack("A3:  " <> to_string(Api.Questions.a3()))
     Leds.Leds.blink_leds(3)
+    #ips = get_ips()
+    #Api.Slack.say_to_slack("Running on IP: " <> Enum.join(ips, " -- "))
     {:stop, :normal, state}
   end
 

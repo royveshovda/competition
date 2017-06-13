@@ -5,21 +5,21 @@ defmodule Leds.Leds do
     set_red(1)
     set_yellow(0)
     set_green(0)
-    Process.send_after(__MODULE__, :light_off, 120000)
+    Process.send_after(__MODULE__, :light_off, 300000)
   end
 
   def set_2_correct() do
     set_red(1)
     set_yellow(1)
     set_green(0)
-    Process.send_after(__MODULE__, :light_off, 120000)
+    Process.send_after(__MODULE__, :light_off, 300000)
   end
 
   def set_3_correct() do
     set_red(1)
     set_yellow(1)
     set_green(1)
-    Process.send_after(__MODULE__, :light_off, 120000)
+    Process.send_after(__MODULE__, :light_off, 300000)
   end
 
   def blink_leds(times) do
