@@ -7,7 +7,8 @@ defmodule Api.Startup do
 
   def init([]) do
     # Post delayed to make sure network is up and running
-    Process.send_after(self(), :ann, 45000)
+    Process.send_after(self(), :ann, 90000)
+    Leds.Leds.blink_leds(1)
     {:ok, []}
   end
 
@@ -21,6 +22,7 @@ defmodule Api.Startup do
     Api.Slack.say_to_slack("A2:  " <> to_string(Api.Questions.a2()))
     Api.Slack.say_to_slack("Q3:  " <> Api.Questions.q3())
     Api.Slack.say_to_slack("A3:  " <> to_string(Api.Questions.a3()))
+    Leds.Leds.blink_leds(3)
     {:stop, :normal, state}
   end
 

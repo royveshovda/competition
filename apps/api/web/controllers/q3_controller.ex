@@ -28,7 +28,7 @@ defmodule Api.Q3Controller do
           true ->
             Api.Storage.set_q3_correct(session_key)
             prize_token = Api.Storage.generate_and_store_prize_token(session_key)
-
+            Leds.Leds.blink_leds(10)
             Leds.Leds.set_3_correct()
 
             Api.Slack.scream_to_slack("("<>session_key<>") WE HAVE A WINNER: " <> prize_token)

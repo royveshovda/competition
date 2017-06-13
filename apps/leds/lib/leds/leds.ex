@@ -5,21 +5,25 @@ defmodule Leds.Leds do
     set_red(1)
     set_yellow(0)
     set_green(0)
-    Process.send_after(self(), :light_off, 60000)
+    Process.send_after(__MODULE__, :light_off, 120000)
   end
 
   def set_2_correct() do
     set_red(1)
     set_yellow(1)
     set_green(0)
-    Process.send_after(self(), :light_off, 60000)
+    Process.send_after(__MODULE__, :light_off, 120000)
   end
 
   def set_3_correct() do
     set_red(1)
     set_yellow(1)
     set_green(1)
-    Process.send_after(self(), :light_off, 60000)
+    Process.send_after(__MODULE__, :light_off, 120000)
+  end
+
+  def blink_leds(times) do
+    GenServer.cast(__MODULE__, {:blink, times})
   end
 
   def start_link() do
@@ -72,10 +76,31 @@ defmodule Leds.Leds do
     {:noreply, {pid_green, pid_yellow, pid_red}}
   end
 
+  def handle_cast({:blink, times}, {pid_green, pid_yellow, pid_red}) do
+    blink(times, {pid_green, pid_yellow, pid_red})
+    {:noreply, {pid_green, pid_yellow, pid_red}}
+  end
+
   def handle_info(:light_off, {pid_green, pid_yellow, pid_red}) do
     ElixirALE.GPIO.write(pid_green, 0)
     ElixirALE.GPIO.write(pid_yellow, 0)
     ElixirALE.GPIO.write(pid_red, 0)
     {:noreply, {pid_green, pid_yellow, pid_red}}
+  end
+
+  defp blink(0, _pids) do
+    :ok
+  end
+
+  defp blink(times, {pid_green, pid_yellow, pid_red}) do
+    ElixirALE.GPIO.write(pid_green, 1)
+    ElixirALE.GPIO.write(pid_yellow, 1)
+    ElixirALE.GPIO.write(pid_red, 1)
+    Process.sleep(500)
+    ElixirALE.GPIO.write(pid_green, 0)
+    ElixirALE.GPIO.write(pid_yellow, 0)
+    ElixirALE.GPIO.write(pid_red, 0)
+    Process.sleep(500)
+    blink(times-1, {pid_green, pid_yellow, pid_red})
   end
 end
