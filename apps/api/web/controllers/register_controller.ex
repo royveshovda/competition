@@ -5,7 +5,7 @@ def index(conn, _params) do
     session_key = Api.Storage.new_session()
     Api.Slack.say_to_slack("("<>session_key<>") New session")
     template =
-      %{email: "me@mail.com", name: "My Myself"}
+      %{"email": "me@mail.com", "name": "My Myself"}
     url = "/api/register/" <> session_key
 
     root =
